@@ -107,10 +107,14 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 })
 
-await fetch("data.txt").then(p => p.text()).then((text) => {
-    allWords = text.replaceAll("\r", "").split("\n").map(w => {
-        let result = infoizeWord(w)
-        return result
+await fetch("data.json").then(p => p.text()).then((text) => {
+    let data = JSON.parse(text)
+    allWords = Object.keys(data).map(w => {
+        data[w].character = w
+        data[w].correct = 0
+        data[w].missed = 0
+        data[w].group = 0
+        return data[w]
     })
 });
 
@@ -231,19 +235,6 @@ function updateWordRemoveSessionCorrect(wordObj, val) {
     window.localStorage.setItem("settings", JSON.stringify(settings))
 }
 
-function infoizeWord(w) {
-    let data = w.split(" ")
-    console.log(w)
-    let result = {
-        character: data[0],
-        answers: data.slice(1),
-        correct: 0,
-        missed: 0,
-        group: 0
-    }
-    return result
-}
-
 
 
 newWord()
@@ -255,8 +246,8 @@ function newWord() {
     }
     wordObj = words[Math.floor(Math.random() * words.length)]
     let character = wordObj.character
-    acceptableWords = wordObj.answers
-    acceptableWordsLeft = wordObj.answers
+    acceptableWords = wordObj.pinyin
+    acceptableWordsLeft = wordObj.pinyin
     document.getElementById("character").innerText = character
 }
 
