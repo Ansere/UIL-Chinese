@@ -1,13 +1,3 @@
-@font-face {
-    font-family: "FZKai-Z03T";
-    src: url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.eot");
-    src: url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.eot?#iefix")format("embedded-opentype"),
-    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.woff2")format("woff2"),
-    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.woff")format("woff"),
-    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.ttf")format("truetype"),
-    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.svg#FZKai-Z03T")format("svg");
-}
-
 html, body {
     height: 100%;
     width: 100%;
@@ -36,9 +26,8 @@ body {
 }
 
 
-#wordListSettingsLabel {
-    margin-top: 2em;
-    margin-bottom: 1em;
+#wordListSettingsLabel, #trainingSettingsLabel {
+    margin-top: 1em;
 }
 
 
@@ -62,6 +51,9 @@ form > input {
 #wordListSettingsDiv, #trainingSettingsDiv {
     display: flex;
     flex-direction: row;
+    column-gap: 2em;
+    margin-bottom: 1em;
+    margin-top: 1em;
 }
 
 #character {

@@ -9,6 +9,11 @@ let settings = {
     customWordList: null,
     removeAfter: false,
     removeAfterVal: 1,
+    between: false,
+    lower: "",
+    upper: "",
+    maxFrequency: true,
+    maxFrequencyVal: 5000,
     wordData: null
 }
 
@@ -17,19 +22,29 @@ document.addEventListener("DOMContentLoaded", () => {
     [].slice.call(document.getElementById("wordListSettingsDiv").getElementsByTagName("input")).forEach(element => {
         if (element.id == "customWordList") {
             return;
+        } else if (element.id == "lowerBound" || element.id == "upperBound") {
+            element.addEventListener("input", () => {
+                element.value = element.value.toLowerCase().split("").filter(e => "qwertyuiopasdfghjklzxcbnmv12345".includes(e)).join("")
+                updateWordList()
+            })
+            return;
+        } else if (element.id == "maxFrequencyVal") {
+            element.addEventListener("input", () => {
+                updateSettings()
+                updateWordList()
+            })
+            return;
         }
         element.onclick = () => {
-            updateWordList()
-            if (element.id == "all" && element.checked) {
-                [].slice.call(document.getElementById("wordListSettings").getElementsByTagName("input")).forEach(element => {
-                    element.checked = true;
-                    element.dispatchEvent(new Event("change"))
-                })
-            } else if (element.parentElement.id == "wordListSettings" && element.id != "all" && !element.checked) {
-                document.getElementById("all").checked = false
-                document.getElementById("all").dispatchEvent(new Event("change"))
-                updateWordList()
+            if (element.id == "between" && element.checked) {
+                if (document.getElementById("lowerBound").value == "") {
+                    document.getElementById("lowerBound").value = "a1"
+                }
+                if (document.getElementById("upperBound").value == "") {
+                    document.getElementById("upperBound").value = "zuo4"
+                }
             }
+            updateWordList()
         }
     });
     [].slice.call(document.getElementById("wordSourceSettings").getElementsByTagName("input")).forEach(e => {
@@ -116,6 +131,7 @@ await fetch("data.json").then(p => p.text()).then((text) => {
         data[w].group = 0
         return data[w]
     })
+    document.getElementById("maxFrequencyVal").setAttribute("max", "" + allWords.length)
 });
 
 let words = allWords
@@ -139,11 +155,14 @@ if (Boolean(window.localStorage.getItem("settings"))) {
     for (let key in settings) {
         if (key === "customWordList" || key === "wordData") {
             continue;
-        } else if (key === "removeAfterVal") {
+        } else if (key === "removeAfterVal" || key === "maxFrequencyVal") {
+            document.getElementById(key).value = settings[key]
+            continue;
+        } else if (key === "lower" || key === "upper") {
+            document.getElementById(key + "Bound").value = settings[key]
+            continue;
+        } else if (settings[key]) {
             document.getElementById(key).value = settings["removeAfterVal"]
-        }
-        if (settings[key]) {
-            console.log(key)
             document.getElementById(key).checked = true
         } else {
             document.getElementById(key).checked = false
@@ -170,18 +189,19 @@ if (Boolean(window.localStorage.getItem("settings"))) {
         }
         return wordObj
     })
-    updateWordList()
 } else {
     window.localStorage.setItem("settings", JSON.stringify(settings))
 }
 
+updateWordList()
 
 
 function updateWordList() {
     updateSettings()
     words = allWords.filter(w => {
-        return (!settings.removeAfter || !Boolean(w.removeSessionCorrect) || w.removeSessionCorrect < settings.removeAfterVal)
+        return (!settings.removeAfter || !Boolean(w.removeSessionCorrect) || w.removeSessionCorrect < settings.removeAfterVal) && (!settings.between || w.pinyin.some(p => p >= settings.lower && p <= settings.upper)) && (!settings.maxFrequency || parseInt(w.freqRank) <= settings.maxFrequencyVal)
     })
+    document.getElementById("activeCountLabel").innerText = "Active Word Bank: " + words.length + " words"
     newWord()
 }
 
@@ -189,8 +209,11 @@ function updateSettings() {
     for (let key in settings) {
         if (key === "customWordList") {
             continue;
-        } else if (key == "removeAfterVal") {
+        } else if (key == "removeAfterVal" || key == "maxFrequencyVal") {
             settings[key] = document.getElementById(key).value
+            continue;
+        } else if (key === "lower" || key === "upper"){
+            settings[key] =  document.getElementById(key + "Bound").value
             continue;
         } else if (key === "wordData") {
             allWords.forEach(w => {
@@ -249,10 +272,6 @@ function newWord() {
     acceptableWords = [...wordObj.pinyin]
     acceptableWordsLeft = [...wordObj.pinyin]
     document.getElementById("character").innerText = character
-    if (parseInt(wordObj.freqRank) > 5000) {
-        newWord()
-        return;
-    }
 }
 
 document.getElementById("input").addEventListener("keyup", (event) => {
