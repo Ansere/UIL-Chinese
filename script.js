@@ -1,14 +1,15 @@
 
 
 let freq = new Map()
-await fetch("frequency.txt").then(e => e.text()).then((text) => {
-    text.split("").forEach(c => {
+let index = 0
+await fetch("hanziDB.json").then(e => e.json()).then((data) => {
+    data.forEach(entry => {
         let charObj = {
-            character: c,
+            character: entry["charcter"],
             pinyin: [],
-            freqRank: freq.size,
+            freqRank: entry["frequency_rank"],
         }
-        freq.set(c, charObj)  
+        freq.set(entry["charcter"], charObj)  
     })    
 })
 
