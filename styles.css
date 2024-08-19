@@ -1,0 +1,70 @@
+@font-face {
+    font-family: "FZKai-Z03T";
+    src: url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.eot");
+    src: url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/f77fbcbf2ae300c015a769a39e0de49d.svg#FZKai-Z03T")format("svg");
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+body {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+}
+
+#mainDiv {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+}
+
+#mainDiv > p {
+    margin: 0.1em;
+}
+
+
+#wordListSettingsLabel {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+
+.wrong {
+    color: red;
+}
+
+audio {
+    width: 20%
+}
+
+p, input, label { 
+    font-size: 1.5em;
+}
+
+form > input {
+    width: 0.75em;
+    height: 0.75em;
+}
+
+#wordListSettingsDiv, #trainingSettingsDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+#character {
+    font-size: 100px;
+    font-family: "KaiTi";
+}
