@@ -249,6 +249,9 @@ function newWord() {
     acceptableWords = wordObj.pinyin
     acceptableWordsLeft = wordObj.pinyin
     document.getElementById("character").innerText = character
+    if (parseInt(wordObj.freqRank) > 5000) {
+        newWord()
+    }
 }
 
 document.getElementById("input").addEventListener("keyup", (event) => {
