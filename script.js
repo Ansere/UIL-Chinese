@@ -246,11 +246,12 @@ function newWord() {
     }
     wordObj = words[Math.floor(Math.random() * words.length)]
     let character = wordObj.character
-    acceptableWords = wordObj.pinyin
-    acceptableWordsLeft = wordObj.pinyin
+    acceptableWords = [...wordObj.pinyin]
+    acceptableWordsLeft = [...wordObj.pinyin]
     document.getElementById("character").innerText = character
     if (parseInt(wordObj.freqRank) > 5000) {
         newWord()
+        return;
     }
 }
 
