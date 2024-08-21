@@ -258,7 +258,31 @@ function updateWordRemoveSessionCorrect(wordObj, val) {
     window.localStorage.setItem("settings", JSON.stringify(settings))
 }
 
+function accentize(text) {
+    let chars = "āēīōūǖáéíóúǘǎěǐǒǔǚàèìòùǜ"
+    let tonalIndex = parseInt(text.slice(-1)) - 1
+    if (tonalIndex == 4) {
+        return text.slice(0, -1)
+    }
+    let letterIndex = -1
+    if (text.includes("a")) {
+        letterIndex = 0
+    } else if (text.includes("e")) {
+        letterIndex = 1
+    } else if (text.includes("ou") || text.includes("uo")) {
+        letterIndex = 3
+    } else {
+        letterIndex = "aeiouv".indexOf(text.split("").reverse().find(c => "aeiouv".includes(c)))
+    }
+    return text.replace("aeiouv".charAt(letterIndex), chars.charAt(tonalIndex * 6 + letterIndex)).slice(0, -1)
+}
 
+function isAccented(text) {
+    if (text.length == 0) {
+        return false
+    }
+    return text.split("").some(c => "āēīōūǖáéíóúǘǎěǐǒǔǚàèìòùǜ".includes(c)) || text.split("").every(c => !"1234567890".includes(c))
+}
 
 newWord()
 function newWord() {
@@ -278,17 +302,23 @@ document.getElementById("input").addEventListener("keyup", (event) => {
     if (event.key !== "Enter") {
         return;
     }
-    let messageText = document.getElementById("input").value.replace("'", "’").trim()
+    let messageText = document.getElementById("input").value.trim()
     document.getElementById("input").value = ""
     let label = document.getElementById("label")
     let inputDiv = document.getElementById("inputDiv")
-    if (acceptableWords.includes(messageText)) {
+    let convertedAcceptableWords = [...acceptableWords]
+    let convertedAcceptableWordsLeft = [...acceptableWordsLeft]
+    if (isAccented(messageText)) {
+        convertedAcceptableWords = convertedAcceptableWords.map(w => accentize(w))
+        convertedAcceptableWordsLeft = convertedAcceptableWordsLeft.map(w => accentize(w))
+    }
+    if (convertedAcceptableWords.includes(messageText)) {
         label.classList = []
-        if (!acceptableWordsLeft.includes(messageText)) {
+        if (!convertedAcceptableWordsLeft.includes(messageText)) {
             label.innerText = "Variant already typed."
             return;
         }
-        acceptableWordsLeft.splice(acceptableWordsLeft.indexOf(messageText), 1)
+        acceptableWordsLeft.splice(convertedAcceptableWordsLeft.indexOf(messageText), 1)
         if (acceptableWordsLeft.length > 0) {
             label.innerText = "Type in the variant."
             let newInput = document.createElement("input")
@@ -310,9 +340,9 @@ document.getElementById("input").addEventListener("keyup", (event) => {
     } else {
         updateWordMiss(wordObj, wordObj.missed + 1)
         label.classList = ["wrong"]
-        label.innerText = "Incorrect! the words were " + acceptableWordsLeft.join(", ") + ". You said: " + messageText
+        label.innerText = "Incorrect! the words were " + convertedAcceptableWordsLeft.join(", ") + ". You said: " + messageText
         if (acceptableWords.length > 1) {
-            label.innerText += "\nCorrectly typed variants: " + acceptableWords.filter(w => !acceptableWordsLeft.includes(w)).join(", ")
+            label.innerText += "\nCorrectly typed variants: " + convertedAcceptableWords.filter(w => !convertedAcceptableWordsLeft.includes(w)).join(", ")
         }
         streak = 0;
     }
