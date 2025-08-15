@@ -3,7 +3,7 @@ let total = 0;
 let correct = 0;
 let streak = 0;
 
-console.log(window.localStorage.getItem("settings"))
+console.log(window.localStorage.getItem("UILChineseSettings"))
 
 let settings = {
     customWordList: null,
