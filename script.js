@@ -147,8 +147,8 @@ let wordObj = {}
 let acceptableWords = []
 let acceptableWordsLeft = []
 
-if (Boolean(window.localStorage.getItem("settings"))) {
-    let pastSettings = JSON.parse(window.localStorage.getItem("settings"))
+if (Boolean(window.localStorage.getItem("UILChineseSettings"))) {
+    let pastSettings = JSON.parse(window.localStorage.getItem("UILChineseSettings"))
     for (let key in pastSettings) {
         settings[key] = pastSettings[key]
     }
@@ -190,7 +190,7 @@ if (Boolean(window.localStorage.getItem("settings"))) {
         return wordObj
     })
 } else {
-    window.localStorage.setItem("settings", JSON.stringify(settings))
+    window.localStorage.setItem("UILChineseSettings", JSON.stringify(settings))
 }
 
 updateWordList()
@@ -237,25 +237,25 @@ function updateSettings() {
 function updateWordCorrect(wordObj, val) {
     settings.wordData[wordObj.character].correct = val
     wordObj.correct = val
-    window.localStorage.setItem("settings", JSON.stringify(settings))
+    window.localStorage.setItem("UILChineseSettings", JSON.stringify(settings))
 }
 
 function updateWordMiss(word, val) {
     settings.wordData[wordObj.character].correct = val
     wordObj.missed = val
-    window.localStorage.setItem("settings", JSON.stringify(settings))
+    window.localStorage.setItem("UILChineseSettings", JSON.stringify(settings))
 }
 
 function updateWordGroupChange(word) {
     settings.wordData[wordObj.character].group = val
     wordObj.group = val
-    window.localStorage.setItem("settings", JSON.stringify(settings))
+    window.localStorage.setItem("UILChineseSettings", JSON.stringify(settings))
 }
 
 function updateWordRemoveSessionCorrect(wordObj, val) {
     settings.wordData[wordObj.character].removeSessionCorrect = val
     wordObj.removeSessionCorrect = val
-    window.localStorage.setItem("settings", JSON.stringify(settings))
+    window.localStorage.setItem("UILChineseSettings", JSON.stringify(settings))
 }
 
 function accentize(text) {
